@@ -1,21 +1,40 @@
-def rename_file path, new_name_part
+def rename_file path, new_name_part, old_name_part
   unless path.empty?
     files = Dir.entries(path)
 
-    files.each do |f|
-      next if f == "." || f == ".."
-      old_name = path + "\\" + f
-      new_name = path + "\\" + f.split("_")[0] + "_" + new_name_part + File.extname(f)
-      
-      puts "Old Name"
-      puts old_name
-      puts
-      puts "New Name"
-      puts new_name
-      puts
-      #File.rename(old_name, new_name)
+    puts "Are you sure you want to rename " + files.count.to_s + " files? (yes or no)"
+    rename_files = gets.chomp
+
+    if rename_files.downcase == "yes"
+      files.each do |f|
+        next if f == "." || f == ".."
+        old_name = path + "/" + f
+        new_name = path + "/" + f.gsub(old_name_part, new_name_part)
+
+        File.rename(old_name, new_name)
+      end
+    else
+      puts "Renaming cancled"
     end
+    puts
+    puts "Rename Completed"
+    puts
+    system "ls -l " + path
   end
 end
 
-rename_file ARGV[0], ARGV[1]
+puts "Enter directory: "
+path = gets.chomp
+
+
+if File.directory? path
+  puts "Enter text to replace: "
+  old_name_part = gets.chomp
+
+  puts "Enter replacement text: "
+  new_name_part = gets.chomp
+
+  rename_file path, new_name_part, old_name_part
+else
+  puts "That path does not exist"
+end
