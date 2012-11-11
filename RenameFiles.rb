@@ -26,7 +26,6 @@ end
 puts "Enter directory: "
 path = gets.chomp
 
-
 if File.directory? path
   puts "Enter text to replace: "
   old_name_part = gets.chomp
